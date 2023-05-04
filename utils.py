@@ -12,54 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-
-
-class DeepNet(nn.Module):
-    def __init__(self, input_size):
-        super().__init__()
-        self.fc1 = nn.Linear(input_size, 256)
-        self.fc2 = nn.Linear(256, 100)
-        self.fc3 = nn.Linear(100, 50)
-        self.fc4 = nn.Linear(50, 1)
-
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = self.fc4(x)  # sigmoid applied in criterion
-        return x
-
-
-class DeepNetModel:
-    def __init__(self, input_size):
-        self.model = DeepNet(input_size)
-
-    def fit(self, X_train, y_train):
-        optimizer = optim.Adam(self.model.parameters(), lr=0.01)
-        criterion = nn.BCEWithLogitsLoss()
-        for epoch in range(5):
-            for i in range(len(X_train)):
-                # get the inputs; data is a list of [inputs, labels]
-                x, y = X_train[i], y_train[i]
-
-                # zero the parameter gradients
-                optimizer.zero_grad()
-
-                # forward + backward + optimize
-                outputs = self.model(x)
-                loss = criterion(outputs, y)
-                loss.backward()
-                optimizer.step()
-
-    def predict(self, X_test):
-        result = np.zeros((len(X_test)))
-        for i in range(len(X_test)):
-            result[i] = self.model(X_test[i])
-        return result
-
+import gzip
+import shutil
 
 
 def set_seed(seed):
@@ -183,7 +137,7 @@ class EvaluationResults:
         self.f_score = f_score
 
     def __repr__(self):
-        return f'confusion_matrx: {self.confusion_matrix}, precision: {self.precision}, recall: {self.recall}, f_score: {self.f_score}'
+        return f'confusion_matrx: {self.confusion_matrix.tolist()}, precision: {self.precision}, recall: {self.recall}, f_score: {self.f_score}'
 
 
 def evaluate_results(test_labels, results):
@@ -292,3 +246,14 @@ def find_hyperparameters_for_random_forest(X_train, y_train, X_test, y_test):
     print(evaluate_results(y_test, best_rf.predict(X_test)))
     print('Parameters for these results:')
     print(grid_search.best_params_)
+
+
+def compress_file(file_name):
+    with open(file_name, 'rb') as f_in, gzip.open(f'{file_name}.gz', 'wb') as f_out:
+        f_out.writelines(f_in)
+
+
+def decompress_file_and_write(base_file_name):
+    with gzip.open(f'{base_file_name}.gz', 'rb') as f_in:
+        with open(base_file_name, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)

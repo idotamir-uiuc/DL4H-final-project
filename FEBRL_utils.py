@@ -25,6 +25,7 @@ def extract_features(df, links):
     feature_vectors = c.compute(links, df, df)
     return feature_vectors
 
+
 def preprocess_and_generate_train_data(training_set_file_name):
     # Import
     df_train = pd.read_csv(training_set_file_name + ".csv", index_col="rec_id")
