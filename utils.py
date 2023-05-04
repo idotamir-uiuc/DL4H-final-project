@@ -12,8 +12,6 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
-import gzip
-import shutil
 
 
 def set_seed(seed):
@@ -246,14 +244,3 @@ def find_hyperparameters_for_random_forest(X_train, y_train, X_test, y_test):
     print(evaluate_results(y_test, best_rf.predict(X_test)))
     print('Parameters for these results:')
     print(grid_search.best_params_)
-
-
-def compress_file(file_name):
-    with open(file_name, 'rb') as f_in, gzip.open(f'{file_name}.gz', 'wb') as f_out:
-        f_out.writelines(f_in)
-
-
-def decompress_file_and_write(base_file_name):
-    with gzip.open(f'{base_file_name}.gz', 'rb') as f_in:
-        with open(base_file_name, 'wb') as f_out:
-            shutil.copyfileobj(f_in, f_out)
