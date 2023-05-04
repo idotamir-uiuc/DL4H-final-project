@@ -69,12 +69,12 @@ def preprocess_and_generate_test_data(testing_set_file_name):
         block_indexer = rl.Index()
         block_indexer.block(on=field)
         candidates = block_indexer.index(df_test)
-        detects = blocking_performance(candidates, test_true_links, df_test)
+        detects = blocking_performance(candidates, df_test)
         all_candidate_pairs = candidates.union(all_candidate_pairs)
         print("Number of pairs of matched " + field + ": " + str(len(candidates)), ", detected ",
               detects, '/' + str(leng_test_true_links) + " true matched pairs, missed " +
               str(leng_test_true_links - detects))
-    detects = blocking_performance(all_candidate_pairs, test_true_links, df_test)
+    detects = blocking_performance(all_candidate_pairs, df_test)
     print("Number of pairs of at least 1 field matched: " + str(len(all_candidate_pairs)), ", detected ",
           detects, '/' + str(leng_test_true_links) + " true matched pairs, missed " +
           str(leng_test_true_links - detects))

@@ -23,7 +23,3 @@ models = {
 hyperparameter_values = [.001, .002, .005, .01, .02, .05, .1, .2, .5, 1, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
 f_scores = calculate_f_scores_for_models(models, hyperparameter_values, X_train, y_train, X_test, y_test, 10000)
 plot_f_scores(f_scores, hyperparameter_values, 'A')
-
-
-# print("Random Forest from original paper hyperparameter selection:")
-# find_hyperparameters_for_random_forest(X_train, y_train, X_test, y_test)

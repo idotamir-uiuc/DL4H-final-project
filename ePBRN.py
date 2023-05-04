@@ -23,7 +23,7 @@ models = {
 }
 
 for model, model_params in models.items():
-    md = train_model(model, model_params[1], X_train, y_train, model_params[0], 10000)
+    md = train_model(model, model_params[1], X_train, y_train, model_params[0], 30000)
     prediction = classify(md, X_test)
     eval_results = evaluate_results(y_test, prediction)
     print(model, eval_results)

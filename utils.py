@@ -13,13 +13,10 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 
-
-def set_seed(seed):
-    random.seed(seed)
-    np.random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-
-
+################################################################################################
+# Data generation methods all taken directly from
+# https://github.com/ePBRN/Medical-Record-Linkage-Ensemble/blob/master/ePBRN_UNSW_Linkage.ipynb
+# To avoid discrepancies
 def generate_false_links(df, size):
     # A counterpart of generate_true_links(), with the purpose to generate random false pairs
     # for training. The number of false pairs in specified as "size".
@@ -53,8 +50,6 @@ def generate_true_links(df):
     for match_id in df["match_id"].unique():
         if match_id != -1:
             processed = processed + 1
-            # print("In routine generate_true_links(), count =", processed)
-            # clear_output(wait=True)
             linkages = df.loc[df['match_id'] == match_id]
             for j in range(len(linkages) - 1):
                 for k in range(j + 1, len(linkages)):
@@ -76,9 +71,11 @@ def generate_train_X_y(df, train_true_links, extract_features):
     X = np.array(X)
     y = np.array(y)
     return X, y
+################################################################################################
 
-
-# max_iter = 10000 for FEBRL and 30000 ePBRN
+# train model method partially taken from
+# https://github.com/ePBRN/Medical-Record-Linkage-Ensemble/blob/master/ePBRN_UNSW_Linkage.ipynb
+# It was parameterized, added random state, and also added new model types
 def train_model(modeltype, modelparam, train_vectors, train_labels, modeltype_2, max_iter):
     if modeltype == 'svm':  # Support Vector Machine
         model = svm.SVC(C=modelparam, kernel=modeltype_2, random_state=42)
@@ -105,7 +102,9 @@ def train_model(modeltype, modelparam, train_vectors, train_labels, modeltype_2,
                               validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
         model.fit(train_vectors, train_labels)
     elif modeltype == 'rf':
-        model = RandomForestClassifier(criterion=modeltype_2, n_estimators=400, max_features='sqrt', max_depth=10, bootstrap=True, random_state=42, class_weight='balanced', min_samples_leaf=2, ccp_alpha=modelparam)
+        model = RandomForestClassifier(criterion=modeltype_2, n_estimators=400, max_features='sqrt', max_depth=10,
+                                       bootstrap=True, random_state=42, class_weight='balanced', min_samples_leaf=2,
+                                       ccp_alpha=modelparam)
         model.fit(train_vectors, train_labels)
     elif modeltype == 'dnn':
         model = MLPClassifier(solver='lbfgs', alpha=modelparam, hidden_layer_sizes=(256, 100, 50),
@@ -121,6 +120,10 @@ def train_model(modeltype, modelparam, train_vectors, train_labels, modeltype_2,
 
     return model
 
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
 
 def classify(model, test_vectors):
     result = model.predict(test_vectors)
@@ -146,12 +149,8 @@ def evaluate_results(test_labels, results):
     return EvaluationResults(cm, precision, recall, f_score)
 
 
-def blocking_performance(candidates, true_links, df):
-    count = 0
-    for candi in candidates:
-        if df.loc[candi[0]]["match_id"] == df.loc[candi[1]]["match_id"]:
-            count = count + 1
-    return count
+def blocking_performance(candidates, df):
+    return len([c for c in candidates if df.loc[c[0]]["match_id"] == df.loc[c[1]]["match_id"]])
 
 
 def argmax(a):
@@ -166,7 +165,6 @@ def argmin(a):
     return np_a[i], i
 
 
-# max_iter = 10000 for FEBRL and 30000 ePBRN
 def calculate_f_scores_for_models(models, hyperparameter_values, X_train, y_train, X_test, y_test, max_iter):
     model_f_scores = {}
     for model, model_types in models.items():
