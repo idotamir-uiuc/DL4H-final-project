@@ -13,6 +13,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 
+
 ################################################################################################
 # Data generation methods all taken directly from
 # https://github.com/ePBRN/Medical-Record-Linkage-Ensemble/blob/master/ePBRN_UNSW_Linkage.ipynb
@@ -71,6 +72,8 @@ def generate_train_X_y(df, train_true_links, extract_features):
     X = np.array(X)
     y = np.array(y)
     return X, y
+
+
 ################################################################################################
 
 # train model method partially taken from
@@ -120,10 +123,12 @@ def train_model(modeltype, modelparam, train_vectors, train_labels, modeltype_2,
 
     return model
 
+
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
+
 
 def classify(model, test_vectors):
     result = model.predict(test_vectors)

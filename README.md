@@ -1,10 +1,6 @@
->📋  A template README.md for code accompanying a Machine Learning paper
+# Reproducibility Project Of Ensemble Paper
 
-# My Paper Title
-
-This repository is the official implementation of [My Paper Title](https://arxiv.org/abs/2030.12345). 
-
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+This repository is an attempt to reproduce the results of the paper Statistical supervised meta-ensemble algorithm for medical record linkage ([Vo et al., 2019](https://www.sciencedirect.com/science/article/pii/S1532046419301388)). The original paper has a [publicly available repository on github](https://github.com/ePBRN/Medical-Record-Linkage-Ensemble).  
 
 ## Requirements
 
@@ -14,81 +10,56 @@ To install requirements:
 pip install -r requirements.txt
 ```
 
->📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
+## Preprocess Data
+To preprocess the data (this step is necessary before any other step) run:
 
-## Training
+```setup
+python FEBRL_process_data.py
+python ePBRN_process_data.py
+```
 
-To train the model(s) in the paper, run this command:
+## Hyperparameter Selection
+
+To reproduce how hyperparameters were chosen for each data set and reproduce Scheme_A.png and Scheme_B.png, run:
 
 ```train
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
+python FEBRL_hyperparameters.py
+python ePBRN_hyperparameters.py
 ```
 
->📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
+## Train And Evaluate Models
 
-## Evaluation
-
-To evaluate my model on ImageNet, run:
+To evaluate train and evaluate the models, run:
 
 ```eval
-python eval.py --model-file mymodel.pth --benchmark imagenet
+python FEBRL.py
+python ePBRN.py
 ```
-
->📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
-
-## Pre-trained Models
-
-You can download pretrained models here:
-
-- [My awesome model](https://drive.google.com/mymodel.pth) trained on ImageNet using parameters x,y,z. 
-
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
 
 ## Results
 
-Our model achieves the following performance on :
+The following are the results the algorithms achieve on FEBRL and ePBRN in our attempted reproduction of the paper:
 
-### [Image Classification on ImageNet](https://paperswithcode.com/sota/image-classification-on-imagenet)
+| Dataset | Algorithm   | Precision | Recall | F-1 score |
+|---------|-------------|-----------|--------|-----------|
+| FEBRL   | SVM         | 0.961     | 0.997  | 0.978     |
+| FEBRL   | SVM-bag     | 0.952     | 0.997  | 0.974     |
+| FEBRL   | NN          | 0.932     | 0.996  | 0.963     | 
+| FEBRL   | NN-bag      | 0.929     | 0.996  | 0.961     |
+| FEBRL   | LR          | 0.922     | 0.998  | 0.958     |
+| FEBRL   | LR-bag      | 0.929     | 0.996  | 0.961     |
+| ePBRN   | SVM         | 0.322     | 0.986  | 0.485     |
+| ePBRN   | SVM-bag     | 0.734     | 0.964  | 0.834     |
+| ePBRN   | NN          | 0.693     | 0.965  | 0.807     |
+| ePBRN   | NN-bag      | 0.713     | 0.964  | 0.820     |
+| ePBRN   | LR          | 0.593     | 0.968  | 0.736     |
+| ePBRN   | LR-bag      | 0.911     | 0.998  | 0.952     |
+| FEBRL   | Stack & Bag | 0.975     | 0.995  | 0.985     |
+| ePBRN   | Stack & Bag | 0.730     | 0.964  | 0.831     |
 
-| Model name         | Top 1 Accuracy  | Top 5 Accuracy |
-| ------------------ |---------------- | -------------- |
-| My awesome model   |     85%         |      95%       |
-
->📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
+The results from the original paper are in table 6 where scheme A corresponds to FEBRL and scheme B corresponds to ePBRN. Comparing the two it is evident that the performance on ePBRN in our reproduction study was significantly worse although the performance on FEBRL was very close.
 
 
-## Contributing
 
->📋  Pick a licence and describe how to contribute to your code repository. 
-
-[//]: # (# Medical-Record-Linkage-Ensemble)
-
-[//]: # ()
-[//]: # (This repository contains the full code of the paper "Statistical supervised meta-ensemble algorithm for data linkage", published in Journal of Biomedical Informatics. )
-
-[//]: # ()
-[//]: # (Authors: )
-
-[//]: # (Kha Vo <kha.vo@unsw.edu.au>,)
-
-[//]: # (Jitendra Jonnagaddala <jitendra.jonnagaddala@unsw.edu.au>,)
-
-[//]: # (Siaw-Teng Liaw <siaw@unsw.edu.au>.)
-
-[//]: # ()
-[//]: # (+ All of the code in this repository used Python 3.6 or higher with these prerequisite packages: `numpy`, `pandas`, `sklearn`, and `recordlinkage`. To install a missing package, use command `pip install package-name` in a terminal &#40;i.e., cmd in Windows, or Terminal in MacOS&#41;.)
-
-[//]: # ()
-[//]: # (1. Prepare the cleaned datasets for Scheme A, which are stored in two files `febrl3_UNSW.csv` and `febrl3_UNSW.csv`. To reproduce those two files, use Python Notebook &#40;i.e., Jupyter Notebook of Anaconda3 distribution&#41; to run `Rectify_Febrl_Datasets.ipynb`.)
-
-[//]: # ()
-[//]: # (2. Prepare the synthetic ePBRN-error-simulated datasets for Scheme B, which are stored in two files `ePBRN_D_dup.csv` and `ePBRN_F_dup.csv`. The original FEBRL dataset &#40;all original, no duplicate&#41; is contained in 2 files: `/ePBRN_Datasets/ePBRN_D_original.csv` and `/ePBRN_Datasets/ePBRN_F_original.csv`. To reproduce `ePBRN_D_dup.csv` and `ePBRN_F_dup.csv`, run `Error_Generator.ipynb`. In the first cell of the notebook, change variable `inputfile` to either `ePBRN_D_original` or `ePBRN_F_original`, which is respectively corresponding to variable `outputfile` of `ePBRN_D_dup` or `ePBRN_F_dup`. )
-
-[//]: # ()
-[//]: # (3. Reproduce results for Scheme A in the paper by running `FEBRL_UNSW_Linkage.ipynb`.)
-
-[//]: # ()
-[//]: # (4. Reproduce results for Scheme B in the paper by running `ePBRN_UNSW_Linkage.ipynb`.)
-
-[//]: # ()
-[//]: # (5. The plots in the paper can be reproduced by running `Plots.ipynb`.)
+## Citations
+1. Kha Vo, Jitendra Jonnagaddala, and Siaw-Teng Liaw. 2019. Statistical supervised meta-ensemble algorithm for medical record linkage. Journal of Biomedical Informatics, 95:103220.

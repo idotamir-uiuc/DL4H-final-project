@@ -1,15 +1,14 @@
-from FEBRL_utils import *
 from utils import *
 
-training_set_file_name = 'FEBRL_train'
-testing_set_file_name = 'FEBRL_test'
 set_seed(42)
 
 print('Importing training data')
-X_train, y_train = preprocess_and_generate_train_data(training_set_file_name)
+X_train = np.genfromtxt('data/FERBL_X_train.csv', delimiter=',')
+y_train = np.genfromtxt('data/FERBL_y_train.csv', delimiter=',')
 
 print('Import testing data')
-X_test, y_test = preprocess_and_generate_test_data(testing_set_file_name)
+X_test = np.genfromtxt('data/FERBL_X_test.csv', delimiter=',')
+y_test = np.genfromtxt('data/FERBL_y_test.csv', delimiter=',')
 
 print("Base learners from original paper hyperparameter selection:")
 models = {
