@@ -28,9 +28,9 @@ def extract_features(df, links):
 
 def preprocess_and_generate_train_data(training_set_file_name):
     # Import
-    df_train = pd.read_csv(training_set_file_name + ".csv", index_col="rec_id")
+    df_train = pd.read_csv(training_set_file_name + '.csv', index_col='rec_id')
     train_true_links = generate_true_links(df_train)
-    print("Train set size:", len(df_train), ", number of matched pairs: ", str(len(train_true_links)))
+    print('Train set size:', len(df_train), ', number of matched pairs: ', str(len(train_true_links)))
     # Preprocess train set
     df_train['postcode'] = df_train['postcode'].astype(str)
     df_train['given_name_soundex'] = phonetic(df_train['given_name'], method='soundex')
@@ -42,12 +42,12 @@ def preprocess_and_generate_train_data(training_set_file_name):
 
 
 def preprocess_and_generate_test_data(testing_set_file_name):
-    df_test = pd.read_csv(testing_set_file_name + ".csv", index_col="rec_id")
+    df_test = pd.read_csv(testing_set_file_name + '.csv', index_col='rec_id')
     test_true_links = generate_true_links(df_test)
     leng_test_true_links = len(test_true_links)
-    print("Test set size:", len(df_test), ", number of matched pairs: ", str(leng_test_true_links))
-    print("BLOCKING PERFORMANCE:")
-    blocking_fields = ["given_name", "surname", "postcode"]
+    print('Test set size:', len(df_test), ', number of matched pairs: ', str(leng_test_true_links))
+    print('BLOCKING PERFORMANCE:')
+    blocking_fields = ['given_name', "surname", "postcode"]
     all_candidate_pairs = []
     for field in blocking_fields:
         block_indexer = rl.Index()

@@ -20,11 +20,11 @@ from sklearn.model_selection import GridSearchCV
 # To avoid discrepancies
 def generate_false_links(df, size):
     # A counterpart of generate_true_links(), with the purpose to generate random false pairs
-    # for training. The number of false pairs in specified as "size".
-    df["rec_id"] = df.index.values.tolist()
+    # for training. The number of false pairs in specified as 'size'.
+    df['rec_id'] = df.index.values.tolist()
     indices_1 = []
     indices_2 = []
-    unique_match_id = df["match_id"].unique()
+    unique_match_id = df['match_id'].unique()
     unique_match_id = unique_match_id[~np.isnan(unique_match_id)]  # remove nan values
     for j in range(size):
         false_pair_ids = choice(unique_match_id, 2)
@@ -32,8 +32,8 @@ def generate_false_links(df, size):
         candidate_1 = candidate_1_cluster.iloc[choice(range(len(candidate_1_cluster)))]
         candidate_2_cluster = df.loc[df['match_id'] == false_pair_ids[1]]
         candidate_2 = candidate_2_cluster.iloc[choice(range(len(candidate_2_cluster)))]
-        indices_1 = indices_1 + [candidate_1["rec_id"]]
-        indices_2 = indices_2 + [candidate_2["rec_id"]]
+        indices_1 = indices_1 + [candidate_1['rec_id']]
+        indices_2 = indices_2 + [candidate_2['rec_id']]
     links = pd.MultiIndex.from_arrays([indices_1, indices_2])
     return links
 
@@ -41,21 +41,21 @@ def generate_false_links(df, size):
 def generate_true_links(df):
     # although the match_id column is included in the original df to imply the true links,
     # this function will create the true_link object identical to the true_links properties
-    # of recordlinkage toolkit, in order to exploit "Compare.compute()" from that toolkit
+    # of recordlinkage toolkit, in order to exploit 'Compare.compute()' from that toolkit
     # in extract_function() for extracting features quicker.
     # This process should be deprecated in the future release of the UNSW toolkit.
-    df["rec_id"] = df.index.values.tolist()
+    df['rec_id'] = df.index.values.tolist()
     indices_1 = []
     indices_2 = []
     processed = 0
-    for match_id in df["match_id"].unique():
+    for match_id in df['match_id'].unique():
         if match_id != -1:
             processed = processed + 1
             linkages = df.loc[df['match_id'] == match_id]
             for j in range(len(linkages) - 1):
                 for k in range(j + 1, len(linkages)):
-                    indices_1 = indices_1 + [linkages.iloc[j]["rec_id"]]
-                    indices_2 = indices_2 + [linkages.iloc[k]["rec_id"]]
+                    indices_1 = indices_1 + [linkages.iloc[j]['rec_id']]
+                    indices_2 = indices_2 + [linkages.iloc[k]['rec_id']]
     links = pd.MultiIndex.from_arrays([indices_1, indices_2])
     return links
 
@@ -127,7 +127,7 @@ def train_model(modeltype, modelparam, train_vectors, train_labels, modeltype_2,
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
 
 
 def classify(model, test_vectors):

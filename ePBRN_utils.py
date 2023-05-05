@@ -9,13 +9,13 @@ def swap_fields_flag(f11, f12, f21, f22):
 
 
 def join_names_space(f11, f12, f21, f22):
-    return ((f11 + " " + f12 == f21) | (f11 + " " + f12 == f22) | (f21 + " " + f22 == f11) | (
-            f21 + " " + f22 == f12)).astype(float)
+    return ((f11 + ' ' + f12 == f21) | (f11 + ' ' + f12 == f22) | (f21 + ' ' + f22 == f11) | (
+            f21 + ' ' + f22 == f12)).astype(float)
 
 
 def join_names_dash(f11, f12, f21, f22):
-    return ((f11 + "-" + f12 == f21) | (f11 + "-" + f12 == f22) | (f21 + "-" + f22 == f11) | (
-            f21 + "-" + f22 == f12)).astype(float)
+    return ((f11 + '-' + f12 == f21) | (f11 + '-' + f12 == f22) | (f21 + '-' + f22 == f11) | (
+            f21 + '-' + f22 == f12)).astype(float)
 
 
 def abb_surname(f1, f2):
@@ -49,7 +49,7 @@ def extract_features(df, links):
 
 
 def preprocess_and_generate_train_data(training_set_file_name):
-    df_train = pd.read_csv(training_set_file_name + ".csv", index_col="rec_id")
+    df_train = pd.read_csv(training_set_file_name + '.csv', index_col="rec_id")
     train_true_links = generate_true_links(df_train)
     print("Train set size:", len(df_train), ", number of matched pairs: ", str(len(train_true_links)))
     # Preprocess train set

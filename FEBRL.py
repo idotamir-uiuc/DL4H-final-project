@@ -68,7 +68,7 @@ for comb in itertools.combinations(range(len(model_bagging_results)), 3):
     stack_predictions[stack_predictions > agreement_threshold] = 1
     stack_predictions[stack_predictions <= agreement_threshold] = 0
     stacking_eval = evaluate_results(y_test, stack_predictions)
-    print(*sub_models_names, sep=", ")
+    print(*sub_models_names, sep=', ')
     print(stacking_eval)
 
 agreement_threshold = 0.66  # 2/3s of models agree (possible values are 0, 1/3, 2/3, and 1)
@@ -84,5 +84,5 @@ for comb in itertools.combinations(range(len(model_bagging_results)), 3):
     stack_predictions[stack_predictions > agreement_threshold] = 1
     stack_predictions[stack_predictions <= agreement_threshold] = 0
     stacking_eval = evaluate_results(y_test, stack_predictions)
-    print(*sub_models_names, sep=", ")
+    print(*sub_models_names, sep=', ')
     print(stacking_eval)

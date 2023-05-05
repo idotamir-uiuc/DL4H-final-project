@@ -10,7 +10,7 @@ print('Import testing data')
 X_test = np.genfromtxt('data/FERBL_X_test.csv', delimiter=',')
 y_test = np.genfromtxt('data/FERBL_y_test.csv', delimiter=',')
 
-print("Base learners from original paper hyperparameter selection:")
+print('Base learners from original paper hyperparameter selection:')
 models = {
     'dnn': ['relu', 'logistic'],
     'svm': ['linear', 'rbf'],
